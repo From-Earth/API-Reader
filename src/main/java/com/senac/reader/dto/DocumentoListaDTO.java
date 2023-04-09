@@ -1,26 +1,23 @@
 package com.senac.reader.dto;
 
-import javax.persistence.JoinColumn;
+import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
+import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.senac.reader.model.Usuario;
 
-
-public class DocumentoDTO {
-	
+public class DocumentoListaDTO {
 	private long id;
-	
-	private MultipartFile arquivo;
 	
 	private String nome;
 
 	private double progresso;
 	
 	private boolean publico;
-
-	@JoinColumn(name = "fk_usuario")
+	
+	private String extensao;
+	
 	@JsonIgnoreProperties("documento")
 	private Usuario usuario;
 
@@ -32,13 +29,7 @@ public class DocumentoDTO {
 		this.id = id;
 	}
 
-	public MultipartFile getArquivo() {
-		return arquivo;
-	}
-
-	public void setArquivo(MultipartFile arquivo) {
-		this.arquivo = arquivo;
-	}
+	
 
 	public String getNome() {
 		return nome;
@@ -64,6 +55,16 @@ public class DocumentoDTO {
 		this.publico = publico;
 	}
 
+
+	
+	public String getExtensao() {
+		return extensao;
+	}
+
+	public void setExtensao(String extensao) {
+		this.extensao = extensao;
+	}
+
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -71,9 +72,24 @@ public class DocumentoDTO {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
+
+	public DocumentoListaDTO() {
+		
+	}
 	
 
+	public DocumentoListaDTO(long id, String nome, double progresso, boolean publico, String extensao,  Usuario usuario) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.progresso = progresso;
+		this.publico = publico;
+		this.extensao = extensao;
+		this.usuario = usuario;
+	}
+
+	
+	
 	
 	
 }

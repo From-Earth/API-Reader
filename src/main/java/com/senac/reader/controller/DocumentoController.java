@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senac.reader.dto.DocumentoDTO;
+import com.senac.reader.dto.DocumentoListaDTO;
 import com.senac.reader.model.Documento;
 import com.senac.reader.repository.DocumentoRepository;
 import com.senac.reader.service.DocumentoService;
@@ -44,9 +45,10 @@ public class DocumentoController {
 	private DocumentoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Documento>> lista(){
-		return ResponseEntity.ok(repository.findAll());
-	}
+	public ResponseEntity<List<DocumentoListaDTO>> lista(){
+		return service.listar().map(resp -> ResponseEntity.status(200).body(resp))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+		}
 	@PostMapping("/upload")
 	public ResponseEntity<Object> upload(@RequestParam String pessoaJson, MultipartFile arquivo){
 		ObjectMapper mapper = new ObjectMapper();        

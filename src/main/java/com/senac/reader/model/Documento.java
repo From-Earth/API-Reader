@@ -6,13 +6,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "documento")
@@ -40,6 +44,12 @@ public class Documento {
 	
 	@NotBlank(message = "campo extensao nao pode ser em branco")
 	private String extensao;
+	
+	@ManyToOne
+	@JoinColumn(name = "fk_usuario")
+	@JsonIgnoreProperties("documento")
+	@NotNull(message = "Campo documento não pode ser nulo")
+	private Usuario usuario;
 	
 	public long getId() {
 		return id;
@@ -95,6 +105,14 @@ public class Documento {
 
 	public void setExtensao(String extensao) {
 		this.extensao = extensao;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 	

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.print.Doc;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.senac.reader.dto.DocumentoDTO;
+import com.senac.reader.dto.DocumentoListaDTO;
 import com.senac.reader.model.Documento;
 import com.senac.reader.repository.DocumentoRepository;
 
@@ -41,6 +44,7 @@ public class DocumentoService {
 				documento.setProgresso(dto.getProgresso());
 				documento.setArquivo(arquivoByte);
 				documento.setExtensao(dto.getArquivo().getContentType());
+				documento.setUsuario(dto.getUsuario());
 
 				return Optional.ofNullable(repository.save(documento));
 			} catch (IOException e) {
@@ -81,6 +85,28 @@ public class DocumentoService {
     	
     }
     
+    @SuppressWarnings("null")
+	public Optional<List<DocumentoListaDTO>> listar(){
+    	List<Documento> documentos =  repository.findAll();
+    	List<DocumentoListaDTO> documentosDTO = new  ArrayList<DocumentoListaDTO>();;
+    	
+    	if(documentos.isEmpty()) {
+    		return null;
+    	}
+    	for (Documento documento : documentos) {
+			DocumentoListaDTO doc = new DocumentoListaDTO(
+					documento.getId(),
+					documento.getNome(),
+					documento.getProgresso(),
+					documento.isPublico(),
+					documento.getExtensao(),
+					documento.getUsuario()
+					);
+		documentosDTO.add(doc);
+			
+		}
+    	return Optional.ofNullable(documentosDTO);
+    }
     
     
     
