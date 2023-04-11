@@ -85,7 +85,7 @@ public class DocumentoService {
     	List<DocumentoListaDTO> documentosDTO = new  ArrayList<DocumentoListaDTO>();;
     	
     	if(documentos.isEmpty()) {
-    		return null;
+    		return Optional.empty();
     	}
     	for (Documento documento : documentos) {
 			DocumentoListaDTO doc = new DocumentoListaDTO(
