@@ -10,10 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.senac.reader.dto.UsuarioLoginDTO;
 import com.senac.reader.model.Usuario;
@@ -43,10 +46,30 @@ public class UsuarioController {
 		return service.logar(dto).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
-	
+
 	@GetMapping
 	public ResponseEntity<List<Usuario>> listar(){
 		return ResponseEntity.ok(repository.findAll());
 	}
-
+	@GetMapping("/{id}")
+	public ResponseEntity<Usuario> listar(@Valid @PathVariable long id){
+		return repository.findById(id).map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
+	
+	@PutMapping("/atualizar")
+	public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuario){
+		return repository.findById(usuario.getId()).map(resp ->{
+			resp.setNome(usuario.getNome());
+			resp.setEmail(usuario.getEmail());
+			resp.setTelefone(usuario.getTelefone());
+			resp.setLogradouro(usuario.getLogradouro());
+			resp.setNumeroLogradouro(usuario.getNumeroLogradouro());
+			resp.setComplemento(usuario.getComplemento());
+			
+			return ResponseEntity.status(201).body(resp);
+		}).orElseThrow(() ->{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário inválido");
+		});
+	}
 }
