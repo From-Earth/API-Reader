@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,7 @@ public class UsuarioController {
 	}
 	
 	@PutMapping("/atualizar")
-	public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuario){
+	public Optional<Usuario> atualizar(@Valid @RequestBody Usuario usuario){
 		return repository.findById(usuario.getId()).map(resp ->{
 			resp.setNome(usuario.getNome());
 			resp.setEmail(usuario.getEmail());
@@ -66,10 +67,20 @@ public class UsuarioController {
 			resp.setLogradouro(usuario.getLogradouro());
 			resp.setNumeroLogradouro(usuario.getNumeroLogradouro());
 			resp.setComplemento(usuario.getComplemento());
-			
-			return ResponseEntity.status(201).body(resp);
+			return Optional.ofNullable(repository.save(resp));
+			//return ResponseEntity.status(201).body(resp);
 		}).orElseThrow(() ->{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário inválido");
+		});
+	}
+	
+	@DeleteMapping("/{id_usuario}")
+	public ResponseEntity<Object> deletar(@PathVariable(value = "id_usuario") Long idUsuario) {
+		return repository.findById(idUsuario).map(idExistente -> {
+			repository.deleteById(idUsuario);
+			return ResponseEntity.status(200).build();
+		}).orElseThrow(() -> {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID inexistente, passe um ID valido para deletar!");
 		});
 	}
 }
