@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senac.reader.dto.DocumentoDTO;
 import com.senac.reader.dto.DocumentoListaDTO;
 import com.senac.reader.model.Documento;
+import com.senac.reader.model.Usuario;
 import com.senac.reader.repository.DocumentoRepository;
 import com.senac.reader.service.DocumentoService;
 
@@ -50,15 +51,8 @@ public class DocumentoController {
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 		}
 	@PostMapping("/upload")
-	public ResponseEntity<Object> upload(@RequestParam String pessoaJson, MultipartFile arquivo){
-		ObjectMapper mapper = new ObjectMapper();        
-		DocumentoDTO dto = new DocumentoDTO();
-		
-		try {
-			 dto = mapper.readValue(pessoaJson, DocumentoDTO.class);
-		}catch (IOException e) {
-            return ResponseEntity.badRequest().body("Não foi possível ler o json");
-        }
+	public ResponseEntity<Object> upload( MultipartFile arquivo){
+		DocumentoDTO dto = new DocumentoDTO();	
 		dto.setArquivo(arquivo);
 		return service.salvarDocumento(dto).map(resp ->	ResponseEntity.status(201).body(resp))
 			.orElseThrow(() -> {

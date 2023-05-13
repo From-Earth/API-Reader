@@ -35,9 +35,7 @@ public class DocumentoService {
 				byte [] arquivoByte = dto.getArquivo().getBytes();
 				Documento documento = new Documento();
 				documento.setNome(dto.getArquivo().getOriginalFilename());
-				documento.setProgresso(dto.getProgresso());
 				documento.setArquivo(arquivoByte);
-				documento.setExtensao(dto.getArquivo().getContentType());
 				documento.setUsuario(dto.getUsuario());
 
 				return Optional.ofNullable(repository.save(documento));
