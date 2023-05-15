@@ -24,10 +24,10 @@ public class Usuario {
 
 	@NotBlank(message = "campo nome nao pode ser em branco")
 	@Size(min = 3, max = 50 )
-	private String nome;
+	private String nome;	
 
 	//@NotBlank(message = "campo cpf nao pode ser em branco")
-	@Size(min = 14, max = 14 )
+	@Size(min = 11, max = 14 )	
 	private String cpf;
 	
 

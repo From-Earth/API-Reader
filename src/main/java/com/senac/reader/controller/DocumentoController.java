@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senac.reader.dto.DocumentoDTO;
 import com.senac.reader.dto.DocumentoListaDTO;
 import com.senac.reader.model.Documento;
+import com.senac.reader.model.Usuario;
 import com.senac.reader.repository.DocumentoRepository;
 import com.senac.reader.service.DocumentoService;
 
