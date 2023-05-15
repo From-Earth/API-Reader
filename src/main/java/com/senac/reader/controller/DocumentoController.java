@@ -50,22 +50,9 @@ public class DocumentoController {
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 		}
 	@PostMapping("/upload")
-	public ResponseEntity<Object> upload(@RequestParam String pessoaJson, MultipartFile arquivo){
-		ObjectMapper mapper = new ObjectMapper();        
-		DocumentoDTO dto = new DocumentoDTO();
+	public Object upload(@RequestParam long id, MultipartFile arquivo){
 		
-		try {
-			 dto = mapper.readValue(pessoaJson, DocumentoDTO.class);
-		}catch (IOException e) {
-            return ResponseEntity.badRequest().body("Não foi possível ler o json");
-        }
-		dto.setArquivo(arquivo);
-		return service.salvarDocumento(dto).map(resp ->	ResponseEntity.status(201).body(resp))
-			.orElseThrow(() -> {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Usuario existente, cadastre outro usuario!.");
-
-		});
+		return service.salvarDocumento(id, arquivo);
 	}
 	
 	

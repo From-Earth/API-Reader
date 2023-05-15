@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senac.reader.dto.DocumentoDTO;
 import com.senac.reader.dto.DocumentoListaDTO;
 import com.senac.reader.model.Documento;
 import com.senac.reader.repository.DocumentoRepository;
+import com.senac.reader.repository.UsuarioRepository;
 
 @Service
 public class DocumentoService {
@@ -25,26 +27,30 @@ public class DocumentoService {
 	@Autowired
 	private DocumentoRepository repository;
 	
-	public Optional<Object> salvarDocumento(DocumentoDTO dto){
-		return repository.findByNomeContainingIgnoreCase(dto.getNome()).map((resp) ->{
-			return Optional.empty();
-		}).orElseGet(()->{
+	@Autowired
+	private UsuarioRepository userRepository;
+	
+	public Object salvarDocumento(long id, MultipartFile arquivo){		
+		return userRepository.findById(id).map((resp) ->{
 			
-			MultipartFile arquivo = dto.getArquivo();			
-			try {
-				byte [] arquivoByte = dto.getArquivo().getBytes();
+			try {					
+				DocumentoDTO dto = new DocumentoDTO();
 				Documento documento = new Documento();
-				documento.setNome(dto.getArquivo().getOriginalFilename());
-				documento.setProgresso(dto.getProgresso());
+				
+				byte [] arquivoByte = arquivo.getBytes();
+				documento.setNome(arquivo.getOriginalFilename());	
 				documento.setArquivo(arquivoByte);
-				documento.setExtensao(dto.getArquivo().getContentType());
-				documento.setUsuario(dto.getUsuario());
+				documento.setExtensao(arquivo.getContentType());
+				documento.setUsuario(resp);
 
 				return Optional.ofNullable(repository.save(documento));
 			} catch (IOException e) {
 				e.printStackTrace();
 				return java.util.Optional.empty();
-			}			
+			}
+		}).orElseGet(()->{
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não encontrado!");
 		});
 	}
 	

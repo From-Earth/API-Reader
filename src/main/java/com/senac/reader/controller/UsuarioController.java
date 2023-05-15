@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.senac.reader.dto.CredenciaisDTO;
+import com.senac.reader.dto.UsuarioCadastroDTO;
 import com.senac.reader.dto.UsuarioLoginDTO;
 import com.senac.reader.model.Usuario;
 import com.senac.reader.repository.UsuarioRepository;
@@ -37,15 +39,14 @@ public class UsuarioController {
 	
 	
 	@PostMapping("/cadastrar")
-	public ResponseEntity<Object> cadastrar(@Valid @RequestBody Usuario usuario){
+	public ResponseEntity<Object> cadastrar(@Valid @RequestBody UsuarioCadastroDTO usuario){
 		return service.cadastrarUsuario(usuario).map(resp -> ResponseEntity.status(201).body(resp))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 	
 	@PostMapping("/logar")
-	public ResponseEntity<Usuario> logar (@RequestBody UsuarioLoginDTO dto){
-		return service.logar(dto).map(resp -> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	public ResponseEntity<CredenciaisDTO> logar (@RequestBody UsuarioLoginDTO dto){
+		return service.logar(dto);
 	}
 
 	@GetMapping
