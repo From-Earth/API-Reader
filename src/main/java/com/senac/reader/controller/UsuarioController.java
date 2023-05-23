@@ -23,6 +23,7 @@ import com.senac.reader.dto.CredenciaisDTO;
 import com.senac.reader.dto.UsuarioCadastroDTO;
 import com.senac.reader.dto.UsuarioLoginDTO;
 import com.senac.reader.model.Usuario;
+import com.senac.reader.projection.UsuarioProjection;
 import com.senac.reader.repository.UsuarioRepository;
 import com.senac.reader.service.UsuarioService;
 
@@ -50,8 +51,8 @@ public class UsuarioController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Usuario>> listar(){
-		return ResponseEntity.ok(repository.findAll());
+	public ResponseEntity<List<UsuarioProjection>> listar(){
+		return ResponseEntity.ok(repository.findAllByOrderByIdDesc());
 	}
 	@GetMapping("/{id}")
 	public ResponseEntity<Usuario> listar(@Valid @PathVariable long id){
@@ -65,6 +66,7 @@ public class UsuarioController {
 			resp.setNome(usuario.getNome());
 			resp.setEmail(usuario.getEmail());
 			resp.setTelefone(usuario.getTelefone());
+			resp.setCpf(usuario.getCpf());
 			resp.setLogradouro(usuario.getLogradouro());
 			resp.setNumeroLogradouro(usuario.getNumeroLogradouro());
 			resp.setComplemento(usuario.getComplemento());

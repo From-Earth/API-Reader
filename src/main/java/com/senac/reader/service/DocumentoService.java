@@ -7,6 +7,8 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,10 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.senac.reader.dto.DocumentoDTO;
-import com.senac.reader.dto.DocumentoListaDTO;
+import com.senac.reader.dto.DocumentoEditDTO;
 import com.senac.reader.model.Documento;
+import com.senac.reader.projection.DocumentoProjection;
 import com.senac.reader.repository.DocumentoRepository;
 import com.senac.reader.repository.UsuarioRepository;
 
@@ -34,10 +35,9 @@ public class DocumentoService {
 		return userRepository.findById(id).map((resp) ->{
 			
 			try {					
-				DocumentoDTO dto = new DocumentoDTO();
-				Documento documento = new Documento();
-				
+				Documento documento = new Documento();				
 				byte [] arquivoByte = arquivo.getBytes();
+				
 				documento.setNome(arquivo.getOriginalFilename());	
 				documento.setArquivo(arquivoByte);
 				documento.setExtensao(arquivo.getContentType());
@@ -54,6 +54,18 @@ public class DocumentoService {
 		});
 	}
 	
+	public Object atualizarDocumento(DocumentoEditDTO documento){		
+		return repository.findById(documento.getId()).map((resp) ->{
+			
+			resp.setNome(documento.getNome());
+			resp.setPublico(documento.isPublico());
+			resp.setDescricao(documento.getDescricao());
+			return Optional.ofNullable(repository.save(resp));
+		}).orElseGet(()->{
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Documento não encontrado!");
+		});
+	}
 	public Optional<HttpEntity<byte[]>> buscarDocumento(long id){
 		return repository.findById(id).map((resp) ->{
 			HttpHeaders httpHeaders = new HttpHeaders();
@@ -86,26 +98,17 @@ public class DocumentoService {
     }
     
     @SuppressWarnings("null")
-	public Optional<List<DocumentoListaDTO>> listar(){
-    	List<Documento> documentos =  repository.findAll();
-    	List<DocumentoListaDTO> documentosDTO = new  ArrayList<DocumentoListaDTO>();;
+	public Optional<Page<DocumentoProjection>> listar(int pagina){
+    	PageRequest pageRequest = PageRequest.of(pagina, 8);
+    	Page<DocumentoProjection> documentos =  repository.findAllByOrderByDataInsercaoDesc(pageRequest);
     	
     	if(documentos.isEmpty()) {
     		return Optional.empty();
     	}
-    	for (Documento documento : documentos) {
-			DocumentoListaDTO doc = new DocumentoListaDTO(
-					documento.getId(),
-					documento.getNome(),
-					documento.getProgresso(),
-					documento.isPublico(),
-					documento.getExtensao(),
-					documento.getUsuario()
-					);
-		documentosDTO.add(doc);
+    	
 			
-		}
-    	return Optional.ofNullable(documentosDTO);
+		
+    	return Optional.ofNullable(documentos);
     }
     
     

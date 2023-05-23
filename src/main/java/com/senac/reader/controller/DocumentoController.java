@@ -8,6 +8,7 @@ import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,9 +30,11 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senac.reader.dto.DocumentoDTO;
+import com.senac.reader.dto.DocumentoEditDTO;
 import com.senac.reader.dto.DocumentoListaDTO;
 import com.senac.reader.model.Documento;
 import com.senac.reader.model.Usuario;
+import com.senac.reader.projection.DocumentoProjection;
 import com.senac.reader.repository.DocumentoRepository;
 import com.senac.reader.service.DocumentoService;
 
@@ -46,14 +50,20 @@ public class DocumentoController {
 	private DocumentoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<DocumentoListaDTO>> lista(){
-		return service.listar().map(resp -> ResponseEntity.status(200).body(resp))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	public ResponseEntity<Page<DocumentoProjection>> lista(@RequestParam(defaultValue = "0") int pagina){
+		return service.listar(pagina).map(resp -> ResponseEntity.status(200).body(resp))
+				.orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
 		}
 	@PostMapping("/upload")
 	public Object upload(@RequestParam long id, MultipartFile arquivo){
 		
 		return service.salvarDocumento(id, arquivo);
+	}
+	
+	@PutMapping("/atualizar")
+	public Object atualizar(@RequestBody DocumentoEditDTO dto){
+		
+		return service.atualizarDocumento(dto);
 	}
 	
 	

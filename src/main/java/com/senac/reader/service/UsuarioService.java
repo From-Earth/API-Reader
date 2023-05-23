@@ -35,7 +35,7 @@ public class UsuarioService {
 	}
 	
 	public Optional<Usuario> atualizarUsuario(Usuario usuario){
-		return repository.findByCpf(usuario.getCpf()).map(resp ->{
+		return repository.findByEmail(usuario.getEmail()).map(resp ->{
 			resp.setNome(usuario.getNome());
 			resp.setEmail(usuario.getEmail());
 			resp.setTelefone(usuario.getTelefone());

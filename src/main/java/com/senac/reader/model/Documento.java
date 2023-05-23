@@ -2,6 +2,7 @@ package com.senac.reader.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +34,8 @@ public class Documento {
 	private String nome;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date data_insercao = new java.sql.Date(System.currentTimeMillis());
+	@Column(name = "data_insercao")
+	private Date dataInsercao = new java.sql.Date(System.currentTimeMillis());
 	
 	
 	@NotNull(message = "campo progresso nao pode ser nulo")
@@ -44,6 +46,8 @@ public class Documento {
 	
 	@NotBlank(message = "campo extensao nao pode ser em branco")
 	private String extensao;
+	
+	private String descricao;
 	
 	@ManyToOne
 	@JoinColumn(name = "fk_usuario")
@@ -76,11 +80,11 @@ public class Documento {
 	}
 
 	public Date getData_insercao() {
-		return data_insercao;
+		return dataInsercao;
 	}
 
 	public void setData_insercao(Date data_insercao) {
-		this.data_insercao = data_insercao;
+		this.dataInsercao = data_insercao;
 	}
 
 	public double getProgresso() {
@@ -105,6 +109,24 @@ public class Documento {
 
 	public void setExtensao(String extensao) {
 		this.extensao = extensao;
+	}
+	
+	
+
+	public Date getDataInsercao() {
+		return dataInsercao;
+	}
+
+	public void setDataInsercao(Date dataInsercao) {
+		this.dataInsercao = dataInsercao;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public Usuario getUsuario() {

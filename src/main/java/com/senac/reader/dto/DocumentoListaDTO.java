@@ -1,5 +1,6 @@
 package com.senac.reader.dto;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.JoinColumn;
@@ -17,6 +18,9 @@ public class DocumentoListaDTO {
 	private boolean publico;
 	
 	private String extensao;
+	
+	private Date dataInsercao;
+	
 	
 	@JsonIgnoreProperties("documento")
 	private Usuario usuario;
@@ -72,19 +76,30 @@ public class DocumentoListaDTO {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+	
+	
+
+	public Date getDataInsercao() {
+		return dataInsercao;
+	}
+
+	public void setDataInsercao(Date dataInsercao) {
+		this.dataInsercao = dataInsercao;
+	}
 
 	public DocumentoListaDTO() {
 		
 	}
 	
 
-	public DocumentoListaDTO(long id, String nome, double progresso, boolean publico, String extensao,  Usuario usuario) {
+	public DocumentoListaDTO(long id, String nome, double progresso, boolean publico, String extensao, Date dataInsercao,  Usuario usuario) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.progresso = progresso;
 		this.publico = publico;
 		this.extensao = extensao;
+		this.dataInsercao = dataInsercao;
 		this.usuario = usuario;
 	}
 
