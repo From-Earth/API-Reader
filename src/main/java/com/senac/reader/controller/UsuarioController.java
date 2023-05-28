@@ -73,7 +73,7 @@ public class UsuarioController {
 			return Optional.ofNullable(repository.save(resp));
 			//return ResponseEntity.status(201).body(resp);
 		}).orElseThrow(() ->{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário inválido");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário inválido");
 		});
 	}
 	
@@ -81,7 +81,7 @@ public class UsuarioController {
 	public ResponseEntity<Object> deletar(@PathVariable(value = "id_usuario") Long idUsuario) {
 		return repository.findById(idUsuario).map(idExistente -> {
 			repository.deleteById(idUsuario);
-			return ResponseEntity.status(200).build();
+			return ResponseEntity.status(204).build();
 		}).orElseThrow(() -> {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID inexistente, passe um ID valido para deletar!");
 		});

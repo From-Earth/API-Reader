@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,6 +77,21 @@ public class DocumentoController {
 				.body(new ByteArrayResource(doc.getArquivo()));
 		
 	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Documento> listar(@Valid @PathVariable long id){
+		return repository.findById(id).map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deletar(@PathVariable(value = "id") Long id) {
+		return repository.findById(id).map(idExistente -> {
+			repository.deleteById(id);
+			return ResponseEntity.status(204).build();
+		}).orElseThrow(() -> {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID inexistente, passe um ID valido para deletar!");
+		});
+	}
 
 }

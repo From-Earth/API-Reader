@@ -18,5 +18,8 @@ public interface DocumentoRepository extends JpaRepository<Documento, Long>{
 	
 	public Page<DocumentoProjection> findAllByOrderByDataInsercaoDesc(Pageable pageable);
 	
+	//public Optional<DocumentoProjection> findById(long id);
+	
+	
 	
 }

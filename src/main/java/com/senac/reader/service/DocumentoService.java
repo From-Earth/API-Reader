@@ -99,7 +99,7 @@ public class DocumentoService {
     
     @SuppressWarnings("null")
 	public Optional<Page<DocumentoProjection>> listar(int pagina){
-    	PageRequest pageRequest = PageRequest.of(pagina, 8);
+    	PageRequest pageRequest = PageRequest.of(pagina, 20);
     	Page<DocumentoProjection> documentos =  repository.findAllByOrderByDataInsercaoDesc(pageRequest);
     	
     	if(documentos.isEmpty()) {
