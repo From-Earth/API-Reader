@@ -32,7 +32,7 @@
  
 ## < Como instalar o Projeto >
  
- Para inicar o projeto e necessário utilizar o Node version v16 ou uma versão superior.
+ Para inicar o projeto e necessário utilizar o **Node** version `v16` ou uma versão superior.
  
  Scripts Disponíveis
 No diretório do projeto, você pode executar:
