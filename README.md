@@ -32,7 +32,7 @@
  
 ## < Como instalar o Projeto >
  
- Para inicar o projeto e necessário ter instalado na sua máquina o **Node** version `v16` ou uma versão superior.
+ Para inicar o projeto e necessário ter instalado na sua máquina o **Node** version `v16` ou uma versão superior e o **Java** na versão `11`.
  
  Scripts Disponíveis
 No diretório do projeto, você pode executar:
